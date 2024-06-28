@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import Header from "../../components/Header/Header";
+import { useForm } from "react-hook-form";
 
 type ProductType = "Type Switcher" | "DVD" | "Furniture" | "Book";
 
@@ -8,6 +9,12 @@ const AddProduct: FC = () => {
   const [productAttributes, setProductAttributes] = useState<{
     [key: string]: string | number;
   }>({});
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setProductType(e.target.value as ProductType);
@@ -24,27 +31,44 @@ const AddProduct: FC = () => {
   return (
     <>
       <Header title="Product Add" btn1="Save" btn2="Cancel" />
-      <form id="product_form" className="mx-3">
+      <form
+        id="product_form"
+        className="mx-3"
+        onSubmit={handleSubmit(() => console.log(productAttributes))}
+      >
         <div className="form-group row mt-3">
           <label className="col-sm-2 col-form-label fw-bold">SKU:</label>
-          <div className="col-sm-10">
-            <input type="text" id="sku" name="sku" className="form-control" />
+          <div className="col-sm-4">
+            <input
+              type="text"
+              id="sku"
+              name="sku"
+              className="form-control"
+              onChange={handleAttributeChange}
+            />
           </div>
         </div>
         <div className="form-group row mt-3">
           <label className="col-sm-2 col-form-label fw-bold">Name:</label>
-          <div className="col-sm-10">
-            <input type="text" id="name" name="name" className="form-control" />
+          <div className="col-sm-4">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              className="form-control"
+              onChange={handleAttributeChange}
+            />
           </div>
         </div>
         <div className="form-group row mt-3">
           <label className="col-sm-2 col-form-label fw-bold">Price ($):</label>
-          <div className="col-sm-10">
+          <div className="col-sm-4">
             <input
-              type="text"
+              type="number"
               id="price"
               name="price"
               className="form-control"
+              onChange={handleAttributeChange}
             />
           </div>
         </div>
@@ -52,7 +76,7 @@ const AddProduct: FC = () => {
           <label className="col-sm-2 col-form-label fw-bold">
             Type Switcher
           </label>
-          <div className="col-sm-10">
+          <div className="col-sm-4">
             <select
               id="productType"
               value={productType}
@@ -74,7 +98,7 @@ const AddProduct: FC = () => {
               <label className="col-sm-2 col-form-label fw-bold">
                 Size (MB):
               </label>
-              <div className="col-sm-10">
+              <div className="col-sm-4">
                 <input
                   type="number"
                   id="size"
@@ -94,7 +118,7 @@ const AddProduct: FC = () => {
               <label className="col-sm-2 col-form-label fw-bold">
                 Height (CM):
               </label>
-              <div className="col-sm-10">
+              <div className="col-sm-4">
                 <input
                   type="number"
                   id="height"
@@ -109,7 +133,7 @@ const AddProduct: FC = () => {
               <label className="col-sm-2 col-form-label fw-bold">
                 Width (CM):
               </label>
-              <div className="col-sm-10">
+              <div className="col-sm-4">
                 <input
                   type="number"
                   id="width"
@@ -124,7 +148,7 @@ const AddProduct: FC = () => {
               <label className="col-sm-2 col-form-label fw-bold">
                 Length (CM):
               </label>
-              <div className="col-sm-10">
+              <div className="col-sm-4">
                 <input
                   type="number"
                   id="length"
@@ -146,7 +170,7 @@ const AddProduct: FC = () => {
               <label className="col-sm-2 col-form-label fw-bold">
                 Weight (KG):
               </label>
-              <div className="col-sm-10">
+              <div className="col-sm-4">
                 <input
                   type="number"
                   id="weight"
@@ -160,6 +184,7 @@ const AddProduct: FC = () => {
             <p className="mt-3 fw-bold">Please provide product weight in KG.</p>
           </div>
         )}
+        <button type="submit">sibmit</button>
       </form>
     </>
   );
