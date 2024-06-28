@@ -2,10 +2,15 @@ import { FC, useState } from "react";
 import Header from "../../components/Header/Header";
 import { useForm } from "react-hook-form";
 
-type ProductType = "Type Switcher" | "DVD" | "Furniture" | "Book";
+type ProductType = "DVD" | "Furniture" | "Book";
 
 const AddProduct: FC = () => {
-  const [productType, setProductType] = useState<ProductType>("Type Switcher");
+  const [productType, setProductType] = useState<ProductType | "">("");
+  const [fixedAttributes, setFixedAttributes] = useState({
+    sku: "",
+    name: "",
+    price: "",
+  });
   const [productAttributes, setProductAttributes] = useState<{
     [key: string]: string | number;
   }>({});
@@ -21,6 +26,15 @@ const AddProduct: FC = () => {
     setProductAttributes({});
   };
 
+  const handleFixedAttributeChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFixedAttributes({
+      ...fixedAttributes,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleAttributeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProductAttributes({
       ...productAttributes,
@@ -28,24 +42,33 @@ const AddProduct: FC = () => {
     });
   };
 
+  const onSubmit = () => {
+    const completeData = { ...fixedAttributes, ...productAttributes };
+    console.log(completeData);
+  };
+
   return (
     <>
-      <Header title="Product Add" btn1="Save" btn2="Cancel" />
       <form
         id="product_form"
         className="mx-3"
-        onSubmit={handleSubmit(() => console.log(productAttributes))}
+        onSubmit={handleSubmit(onSubmit)}
       >
+        <Header title="Product Add" btn1="Save" btn2="Cancel" />
+
         <div className="form-group row mt-3">
           <label className="col-sm-2 col-form-label fw-bold">SKU:</label>
           <div className="col-sm-4">
             <input
               type="text"
               id="sku"
-              name="sku"
               className="form-control"
-              onChange={handleAttributeChange}
+              {...register("sku", { required: true })}
+              onChange={handleFixedAttributeChange}
             />
+          </div>
+          <div className="col-sm-6">
+            {errors.sku && <p>SKU is required.</p>}
           </div>
         </div>
         <div className="form-group row mt-3">
@@ -54,10 +77,13 @@ const AddProduct: FC = () => {
             <input
               type="text"
               id="name"
-              name="name"
               className="form-control"
-              onChange={handleAttributeChange}
+              {...register("name", { required: true })}
+              onChange={handleFixedAttributeChange}
             />
+          </div>
+          <div className="col-sm-6">
+            {errors.name && <p>Name is required.</p>}
           </div>
         </div>
         <div className="form-group row mt-3">
@@ -66,10 +92,13 @@ const AddProduct: FC = () => {
             <input
               type="number"
               id="price"
-              name="price"
               className="form-control"
-              onChange={handleAttributeChange}
+              {...register("price", { required: true })}
+              onChange={handleFixedAttributeChange}
             />
+          </div>
+          <div className="col-sm-6">
+            {errors.price && <p>Price is required.</p>}
           </div>
         </div>
         <div className="form-group row mt-3">
@@ -80,16 +109,20 @@ const AddProduct: FC = () => {
             <select
               id="productType"
               value={productType}
+              {...register("productType", { required: true })}
               onChange={handleTypeChange}
               className="form-select"
             >
-              <option selected disabled>
+              <option value="" disabled>
                 Type Switcher
               </option>
               <option value="DVD">DVD</option>
               <option value="Furniture">Furniture</option>
               <option value="Book">Book</option>
             </select>
+          </div>
+          <div className="col-sm-6">
+            {errors.productType && <p>Select a valid product type.</p>}
           </div>
         </div>
         {productType === "DVD" && (
@@ -102,11 +135,14 @@ const AddProduct: FC = () => {
                 <input
                   type="number"
                   id="size"
-                  name="size"
                   value={productAttributes.size || ""}
+                  {...register("size", { required: true })}
                   onChange={handleAttributeChange}
                   className="form-control"
                 />
+              </div>
+              <div className="col-sm-6">
+                {errors.size && <p>Size is required.</p>}
               </div>
             </div>
             <p className="mt-3 fw-bold">Please provide product size in MB.</p>
@@ -122,11 +158,14 @@ const AddProduct: FC = () => {
                 <input
                   type="number"
                   id="height"
-                  name="height"
                   value={productAttributes.height || ""}
+                  {...register("height", { required: true })}
                   onChange={handleAttributeChange}
                   className="form-control"
                 />
+              </div>
+              <div className="col-sm-6">
+                {errors.height && <p>Height is required.</p>}
               </div>
             </div>
             <div className="form-group row mt-3">
@@ -137,11 +176,14 @@ const AddProduct: FC = () => {
                 <input
                   type="number"
                   id="width"
-                  name="width"
+                  {...register("width", { required: true })}
                   value={productAttributes.width || ""}
                   onChange={handleAttributeChange}
                   className="form-control"
                 />
+              </div>
+              <div className="col-sm-6">
+                {errors.width && <p>Width is required.</p>}
               </div>
             </div>
             <div className="form-group row mt-3">
@@ -152,11 +194,14 @@ const AddProduct: FC = () => {
                 <input
                   type="number"
                   id="length"
-                  name="length"
+                  {...register("length", { required: true })}
                   value={productAttributes.length || ""}
                   onChange={handleAttributeChange}
                   className="form-control"
                 />
+              </div>
+              <div className="col-sm-6">
+                {errors.length && <p>Length is required.</p>}
               </div>
             </div>
             <p className="mt-3 fw-bold">
@@ -174,17 +219,19 @@ const AddProduct: FC = () => {
                 <input
                   type="number"
                   id="weight"
-                  name="weight"
+                  {...register("weight", { required: true })}
                   value={productAttributes.weight || ""}
                   onChange={handleAttributeChange}
                   className="form-control"
                 />
               </div>
+              <div className="col-sm-6">
+                {errors.weight && <p>Weight is required.</p>}
+              </div>
             </div>
             <p className="mt-3 fw-bold">Please provide product weight in KG.</p>
           </div>
         )}
-        <button type="submit">sibmit</button>
       </form>
     </>
   );

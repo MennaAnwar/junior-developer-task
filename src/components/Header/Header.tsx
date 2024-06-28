@@ -14,7 +14,11 @@ const Header: FC<Props> = ({ title, btn1, btn2 }) => {
         <div className="d-flex justify-content-between align-items-center">
           <h3>{title}</h3>
           <div className="action-buttons d-flex justify-content-between align-items-center">
-            <button id="add-product-btn" className="mx-3 btn btn-success">
+            <button
+              id="add-product-btn"
+              className="mx-3 btn btn-success"
+              type="submit"
+            >
               {btn1}
             </button>
             <button id="delete-product-btn" className="btn btn-danger">
