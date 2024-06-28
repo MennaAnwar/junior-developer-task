@@ -1,13 +1,11 @@
 import "./App.scss";
-import Card from "./components/Card/Card";
 import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
-import ProductList from "./Pages/ProductList/ProductList";
+import AddProduct from "./Pages/AddProduct/AddProduct";
 
 function App() {
   return (
     <div className="main-container">
-      <ProductList />
+      <AddProduct />
       <Footer />
     </div>
   );
