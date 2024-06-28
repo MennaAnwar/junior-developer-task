@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import Header from "../../components/Header/Header";
 import { useForm } from "react-hook-form";
 import "./AddProduct.scss";
+import { Link } from "react-router-dom";
 
 type ProductType = "DVD" | "Furniture" | "Book";
 
@@ -49,8 +50,24 @@ const AddProduct: FC = () => {
   };
 
   return (
-    <form id="product_form" className="mx-3" onSubmit={handleSubmit(onSubmit)}>
-      <Header title="Product Add" btn1="Save" btn2="Cancel" />
+    <form id="product_form" className="mx-4" onSubmit={handleSubmit(onSubmit)}>
+      <Header
+        title="Product Add"
+        btns={
+          <>
+            <button
+              id="add-product-btn"
+              className="mx-3 btn btn-success"
+              type="submit"
+            >
+              Add
+            </button>
+            <button id="delete-product-btn" className="btn btn-danger">
+              <Link to="/">Cancel</Link>
+            </button>
+          </>
+        }
+      />
 
       <div className="form-group row mt-3">
         <label className="col-sm-2 col-form-label fw-bold">SKU:</label>
