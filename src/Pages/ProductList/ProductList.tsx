@@ -52,16 +52,18 @@ const ProductList: FC = () => {
           </>
         }
       />
-      {products.map((product) => (
-        <Card
-          key={product.id}
-          SKU={product.sku}
-          Name={product.productName}
-          Price={product.price}
-          Props={product.productProps ? ` ${product.productProps}` : ""}
-          Type={product.productType || "Default Type"} // Using productType or defaulting to "Default Type"
-        />
-      ))}
+      <div className="d-flex flex-wrap">
+        {products.map((product) => (
+          <Card
+            key={product.id}
+            SKU={product.sku}
+            Name={product.productName}
+            Price={product.price}
+            Props={product.productProps ? ` ${product.productProps}` : ""}
+            Type={product.productType || "Default Type"} // Using productType or defaulting to "Default Type"
+          />
+        ))}
+      </div>
     </div>
   );
 };
