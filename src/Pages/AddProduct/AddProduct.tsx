@@ -3,6 +3,7 @@ import Header from "../../components/Header/Header";
 import { useForm } from "react-hook-form";
 import "./AddProduct.scss";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 type ProductType = "DVD" | "Furniture" | "Book";
 
@@ -72,6 +73,33 @@ const AddProduct: FC = () => {
       };
     }
     console.log(completeData);
+    saveProduct(completeData);
+  };
+
+  const saveProduct = async (
+    productData:
+      | {
+          Dimension: string;
+          productType: "Furniture";
+          sku: string;
+          name: string;
+          price: string;
+        }
+      | { productType: "Book"; sku: string; name: string; price: string }
+      | { productType: "DVD"; sku: string; name: string; price: string }
+      | undefined
+  ) => {
+    try {
+      const response = await axios.post(
+        "http://localhost/api/saveProduct.php",
+        productData
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error saving product:", error);
+      throw error; // Throw error to handle in calling component
+    }
   };
 
   return (

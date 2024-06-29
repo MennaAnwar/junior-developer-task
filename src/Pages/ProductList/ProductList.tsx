@@ -10,7 +10,8 @@ interface Product {
   productName: string;
   price: number;
   sku: string;
-  productDescription?: string;
+  productProps?: string; // Adjusted interface to include productProps
+  productType?: string; // Adjusted interface to include productType
 }
 
 const ProductList: FC = () => {
@@ -57,11 +58,8 @@ const ProductList: FC = () => {
           SKU={product.sku}
           Name={product.productName}
           Price={product.price}
-          Props={
-            product.productDescription
-              ? `Description: ${product.productDescription}`
-              : ""
-          }
+          Props={product.productProps ? ` ${product.productProps}` : ""}
+          Type={product.productType || "Default Type"} // Using productType or defaulting to "Default Type"
         />
       ))}
     </div>
