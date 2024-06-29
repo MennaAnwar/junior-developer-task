@@ -29,7 +29,7 @@ const ProductList: FC = () => {
       );
       if (response.data.success) {
         setProducts(response.data.products);
-        console.log(response.data);
+        console.log("Products fetched:", response.data.products);
       } else {
         console.error("Failed to fetch products:", response.data.message);
       }
@@ -44,11 +44,34 @@ const ProductList: FC = () => {
         ? [...prevSelectedSKUs, sku]
         : prevSelectedSKUs.filter((item) => item !== sku)
     );
+    console.log("Selected SKUs:", selectedSKUs);
   };
 
-  useEffect(() => {
-    console.log(selectedSKUs);
-  }, [selectedSKUs]);
+  const handleMassDelete = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost/api/deleteProducts.php",
+        {
+          skus: selectedSKUs,
+        }
+      );
+      console.log(response.data.success);
+      if (response.status === 200) {
+        // Remove deleted products from state
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => !selectedSKUs.includes(product.sku))
+        );
+        // Clear the selected SKUs
+        setSelectedSKUs([]);
+        console.log("Deleted products, updated product list:", products);
+        console.log("Deleted products:", response.data.message);
+      } else {
+        console.error("Failed to delete products:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting products:", error);
+    }
+  };
 
   return (
     <div className="mx-4">
@@ -59,7 +82,11 @@ const ProductList: FC = () => {
             <button id="add-product-btn" className="mx-3 btn btn-success">
               <Link to="/addproduct">ADD</Link>
             </button>
-            <button id="delete-product-btn" className="btn btn-danger">
+            <button
+              id="delete-product-btn"
+              className="btn btn-danger"
+              onClick={handleMassDelete}
+            >
               MASS DELETE
             </button>
           </>
@@ -68,7 +95,7 @@ const ProductList: FC = () => {
       <div className="d-flex flex-wrap">
         {products.map((product) => (
           <Card
-            key={product.id}
+            key={product.sku} // Ensure the key is unique and based on SKU
             SKU={product.sku}
             Name={product.productName}
             Price={product.price}
