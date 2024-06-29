@@ -45,7 +45,32 @@ const AddProduct: FC = () => {
   };
 
   const onSubmit = () => {
-    const completeData = { ...fixedAttributes, ...productAttributes };
+    let completeData;
+    if (productType === "Furniture") {
+      const Dimension =
+        productAttributes.length +
+        "x" +
+        productAttributes.width +
+        "x" +
+        productAttributes.height;
+      completeData = {
+        ...fixedAttributes,
+        Dimension,
+        productType,
+      };
+    } else if (productType === "Book") {
+      completeData = {
+        ...fixedAttributes,
+        ...productAttributes,
+        productType,
+      };
+    } else if (productType === "DVD") {
+      completeData = {
+        ...fixedAttributes,
+        ...productAttributes,
+        productType,
+      };
+    }
     console.log(completeData);
   };
 
