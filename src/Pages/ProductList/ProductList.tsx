@@ -10,12 +10,13 @@ interface Product {
   productName: string;
   price: number;
   sku: string;
-  productProps?: string; // Adjusted interface to include productProps
-  productType?: string; // Adjusted interface to include productType
+  productProps?: string;
+  productType?: string;
 }
 
 const ProductList: FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedSKUs, setSelectedSKUs] = useState<string[]>([]);
 
   useEffect(() => {
     fetchProducts();
@@ -36,6 +37,18 @@ const ProductList: FC = () => {
       console.error("Error fetching products:", error);
     }
   };
+
+  const handleCheckboxChange = (sku: string, checked: boolean) => {
+    setSelectedSKUs((prevSelectedSKUs) =>
+      checked
+        ? [...prevSelectedSKUs, sku]
+        : prevSelectedSKUs.filter((item) => item !== sku)
+    );
+  };
+
+  useEffect(() => {
+    console.log(selectedSKUs);
+  }, [selectedSKUs]);
 
   return (
     <div className="mx-4">
@@ -60,7 +73,9 @@ const ProductList: FC = () => {
             Name={product.productName}
             Price={product.price}
             Props={product.productProps ? ` ${product.productProps}` : ""}
-            Type={product.productType || "Default Type"} // Using productType or defaulting to "Default Type"
+            Type={product.productType || "Default Type"}
+            onCheckboxChange={handleCheckboxChange}
+            isChecked={selectedSKUs.includes(product.sku)}
           />
         ))}
       </div>

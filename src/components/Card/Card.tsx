@@ -7,10 +7,22 @@ interface Props {
   Price: number;
   Props: string;
   Type: string;
+  onCheckboxChange: (sku: string, checked: boolean) => void;
+  isChecked: boolean;
 }
 
-const Card: FC<Props> = ({ SKU, Name, Price, Props, Type }) => {
-  // Adjust Props display based on Type
+const Card: FC<Props> = ({
+  SKU,
+  Name,
+  Price,
+  Props,
+  Type,
+  onCheckboxChange,
+  isChecked,
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onCheckboxChange(SKU, e.target.checked);
+  };
   const displayProps =
     Type === "Furniture"
       ? `Dimension: ${Props}`
@@ -27,7 +39,12 @@ const Card: FC<Props> = ({ SKU, Name, Price, Props, Type }) => {
         <span>{displayProps}</span>
       </div>
       <div className="card-check">
-        <input type="checkbox" id={SKU} />
+        <input
+          type="checkbox"
+          id={SKU}
+          checked={isChecked}
+          onChange={handleChange}
+        />
       </div>
     </div>
   );
