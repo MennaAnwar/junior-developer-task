@@ -14,7 +14,7 @@
     cursor: pointer;
   }
 
-  .card-check {
+  .delete-checkbox {
     background: #fff;
     position: absolute;
     left: 10px;
@@ -23,9 +23,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
-    input {
-      cursor: pointer;
-    }
+    cursor: pointer;
   }
 }

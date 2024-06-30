@@ -9,6 +9,7 @@ interface Props {
   Type: string;
   onCheckboxChange: (sku: string, checked: boolean) => void;
   isChecked: boolean;
+  isDeleting: boolean; // Add isDeleting prop
 }
 
 const Card: FC<Props> = ({
@@ -19,6 +20,7 @@ const Card: FC<Props> = ({
   Type,
   onCheckboxChange,
   isChecked,
+  isDeleting,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onCheckboxChange(SKU, e.target.checked);
@@ -38,14 +40,15 @@ const Card: FC<Props> = ({
         <span>{Price} $</span>
         <span>{displayProps}</span>
       </div>
-      <div className="card-check">
+      {!isDeleting && ( // Render the checkbox only if isDeleting is false
         <input
           type="checkbox"
+          className="delete-checkbox"
           id={SKU}
           checked={isChecked}
           onChange={handleChange}
         />
-      </div>
+      )}
     </div>
   );
 };

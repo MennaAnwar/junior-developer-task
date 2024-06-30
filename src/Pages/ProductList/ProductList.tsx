@@ -16,7 +16,8 @@ interface Product {
 
 const ProductList: FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedSKUs, setSelectedSKUs] = useState<string[]>([]);
+  const [selectedSkus, setSelectedSkus] = useState<string[]>([]);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   useEffect(() => {
     fetchProducts();
@@ -25,11 +26,10 @@ const ProductList: FC = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost/api/getAllProducts.php"
+        "https://octupled-duty.000webhostapp.com/api/getAllProducts.php"
       );
       if (response.data.success) {
         setProducts(response.data.products);
-        console.log("Products fetched:", response.data.products);
       } else {
         console.error("Failed to fetch products:", response.data.message);
       }
@@ -39,37 +39,30 @@ const ProductList: FC = () => {
   };
 
   const handleCheckboxChange = (sku: string, checked: boolean) => {
-    setSelectedSKUs((prevSelectedSKUs) =>
+    setSelectedSkus((prevSelectedSkus) =>
       checked
-        ? [...prevSelectedSKUs, sku]
-        : prevSelectedSKUs.filter((item) => item !== sku)
+        ? [...prevSelectedSkus, sku]
+        : prevSelectedSkus.filter((s) => s !== sku)
     );
-    console.log("Selected SKUs:", selectedSKUs);
   };
 
   const handleMassDelete = async () => {
+    setIsDeleting(true); // Set isDeleting to true before starting the delete operation
     try {
-      const response = await axios.post(
-        "http://localhost/api/deleteProducts.php",
+      await axios.post(
+        "https://octupled-duty.000webhostapp.com/api/deleteProducts.php",
         {
-          skus: selectedSKUs,
+          skus: selectedSkus,
         }
       );
-      console.log(response.data.success);
-      if (response.status === 200) {
-        // Remove deleted products from state
-        setProducts((prevProducts) =>
-          prevProducts.filter((product) => !selectedSKUs.includes(product.sku))
-        );
-        // Clear the selected SKUs
-        setSelectedSKUs([]);
-        console.log("Deleted products, updated product list:", products);
-        console.log("Deleted products:", response.data.message);
-      } else {
-        console.error("Failed to delete products:", response.data.message);
-      }
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => !selectedSkus.includes(product.sku))
+      );
+      setSelectedSkus([]);
     } catch (error) {
       console.error("Error deleting products:", error);
+    } finally {
+      setIsDeleting(false); // Set isDeleting to false after the delete operation is completed
     }
   };
 
@@ -95,14 +88,15 @@ const ProductList: FC = () => {
       <div className="d-flex flex-wrap">
         {products.map((product) => (
           <Card
-            key={product.sku} // Ensure the key is unique and based on SKU
+            key={product.id}
             SKU={product.sku}
             Name={product.productName}
             Price={product.price}
             Props={product.productProps ? ` ${product.productProps}` : ""}
             Type={product.productType || "Default Type"}
             onCheckboxChange={handleCheckboxChange}
-            isChecked={selectedSKUs.includes(product.sku)}
+            isChecked={selectedSkus.includes(product.sku)}
+            isDeleting={isDeleting} // Pass isDeleting to Card component
           />
         ))}
       </div>

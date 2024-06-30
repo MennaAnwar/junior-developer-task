@@ -2,12 +2,13 @@ import { FC, useState } from "react";
 import Header from "../../components/Header/Header";
 import { useForm } from "react-hook-form";
 import "./AddProduct.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 type ProductType = "DVD" | "Furniture" | "Book";
 
 const AddProduct: FC = () => {
+  const navigate = useNavigate();
   const [productType, setProductType] = useState<ProductType | "">("");
   const [fixedAttributes, setFixedAttributes] = useState({
     sku: "",
@@ -45,7 +46,7 @@ const AddProduct: FC = () => {
     });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let completeData;
     if (productType === "Furniture") {
       const Dimension =
@@ -73,7 +74,12 @@ const AddProduct: FC = () => {
       };
     }
     console.log(completeData);
-    saveProduct(completeData);
+    try {
+      await saveProduct(completeData);
+      navigate("/");
+    } catch (error) {
+      console.error("Error saving product:", error);
+    }
   };
 
   const saveProduct = async (
@@ -91,7 +97,7 @@ const AddProduct: FC = () => {
   ) => {
     try {
       const response = await axios.post(
-        "http://localhost/api/saveProduct.php",
+        "https://octupled-duty.000webhostapp.com/api/saveProduct.php",
         productData
       );
       console.log(response.data);
@@ -113,7 +119,7 @@ const AddProduct: FC = () => {
               className="mx-3 btn btn-success"
               type="submit"
             >
-              Add
+              Save
             </button>
             <button id="delete-product-btn" className="btn btn-danger">
               <Link to="/">Cancel</Link>
